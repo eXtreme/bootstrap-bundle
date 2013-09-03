@@ -1,0 +1,139 @@
+{##
+ # This file is part of ExBootstrapBundle.
+ #
+ # (c) 2013 by Jacek Jędrzejewski
+ #}
+
+{% extends "form_div_layout.html.twig" %}
+
+{% block widget_attributes %}
+    {% spaceless %}
+        id="{{ id }}" name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {% for attrname, attrvalue in attr %}{% if attrname not in ['help'] %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endif %}{% endfor %}
+    {% endspaceless %}
+{% endblock widget_attributes %}
+
+{% block form_label %}
+    {% set label_attr = label_attr|merge({ 'class': (label_attr.class|default('')~' control-label')|trim }) %}
+    {% spaceless %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock form_label %}
+
+{% block form_help %}
+    {% spaceless %}
+        {% if attr.help is defined %}
+            <span class="help-block">{{ attr.help|trans({}, translation_domain) }}</span>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_help %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+            {{ block('form_help') }}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block button_row %}
+    {% spaceless %}
+        <div class="form-group">
+            {{ form_widget(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock button_row %}
+
+{% block radio_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            <div class="radio">
+                {{ form_label(form) }}
+            </div>
+            {{ form_errors(form) }}
+            {{ block('form_help') }}
+        </div>
+    {% endspaceless %}
+{% endblock radio_row %}
+
+{% block checkbox_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            <div class="checkbox">
+                {{ form_label(form) }}
+            </div>
+            {{ form_errors(form) }}
+            {{ block('form_help') }}
+        </div>
+    {% endspaceless %}
+{% endblock checkbox_row %}
+
+{% block radio_label %}
+    {% spaceless %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ form_widget(form) }} {{ label|trans({}, translation_domain) }}
+        </label>
+    {% endspaceless %}
+{% endblock radio_label %}
+
+{% block checkbox_label %}
+    {% spaceless %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ form_widget(form) }} {{ label|trans({}, translation_domain) }}
+        </label>
+    {% endspaceless %}
+{% endblock checkbox_label %}
+
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set attr = attr|merge({ 'class': (attr.class|default('')~' form-control')|trim }) %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block choice_widget_collapsed %}
+    {% spaceless %}
+        {% set attr = attr|merge({ 'class': (attr.class|default('')~' form-control')|trim }) %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block textarea_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% spaceless %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block button_widget %}
+    {% set btn_class = type == 'submit' ? 'btn-primary' : 'btn-default' %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn '~btn_class)|trim}) %}
+    {% spaceless %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock button_widget %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <div class="{% if multiple %}checkbox{% else %}radio{% endif %}">
+                    {{ form_label(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            {% for error in errors %}
+                <span class="help-block">{{ error.message }}</span>
+            {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

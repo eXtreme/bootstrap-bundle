@@ -1,0 +1,19 @@
+{
+    "name": "extreme/bootstrap-bundle",
+    "type": "symfony-bundle",
+    "description": "Yet another bootstrap (3) bundle for Symfony 2",
+    "license": "MIT",
+    "keywords": ["form", "bootstrap", "template"],
+    "authors": [
+        {
+            "name": "Jacek Jędrzejewski",
+            "homepage": "http://jacek.jedrzejewski.name/"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Ex\\Bundle\\BootstrapBundle": ""
+        }
+    },
+    "target-dir": "Ex/Bundle/BootstrapBundle"
+}

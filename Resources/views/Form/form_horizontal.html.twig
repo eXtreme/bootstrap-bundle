@@ -1,0 +1,72 @@
+{##
+ # This file is part of ExBootstrapBundle.
+ #
+ # (c) 2013 by Jacek Jędrzejewski
+ #}
+
+{% extends "ExBootstrapBundle:Form:basic.html.twig" %}
+
+{% block form_start %}
+    {% spaceless %}
+        {% set attr = attr|merge({ 'class': (attr.class|default('')~' form-horizontal')|trim }) %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock form_start %}
+
+{% block form_label %}
+    {% set label_attr = label_attr|merge({ 'class': (label_attr.class|default('')~' col-lg-3')|trim }) %}
+    {% spaceless %}
+        {{ parent() }}
+    {% endspaceless %}
+{% endblock form_label %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form) }}
+            <div class="col-lg-9">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+                {{ block('form_help') }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block button_row %}
+    {% spaceless %}
+        <div class="form-group">
+            <div class="col-lg-offset-3 col-lg-9">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock button_row %}
+
+{% block radio_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            <div class="col-lg-offset-3 col-lg-9">
+                <div class="radio">
+                    {{ form_label(form) }}
+                </div>
+                {{ form_errors(form) }}
+                {{ block('form_help') }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock radio_row %}
+
+{% block checkbox_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            <div class="col-lg-offset-3 col-lg-9">
+                <div class="checkbox">
+                    {{ form_label(form) }}
+                </div>
+                {{ form_errors(form) }}
+                {{ block('form_help') }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock checkbox_row %}

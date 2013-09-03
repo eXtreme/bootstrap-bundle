@@ -1,0 +1,18 @@
+{##
+ # This file is part of ExBootstrapBundle.
+ #
+ # (c) 2013 by Jacek Jędrzejewski
+ #}
+
+{% block file_widget %}
+    {% spaceless %}
+        <div class="input-group">
+            <div class="input-group-btn">
+                <span class="btn btn-default btn-file">
+                    {{ 'select_file'|trans }} <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
+                </span>
+            </div>
+            <input type="text" class="form-control" readonly="">
+        </div>
+    {% endspaceless %}
+{% endblock file_widget %}

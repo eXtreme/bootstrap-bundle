@@ -1,0 +1,98 @@
+{##
+ # This file is part of ExBootstrapBundle.
+ #
+ # (c) 2013 by Jacek Jędrzejewski
+ #}
+
+{% extends "knp_menu.html.twig" %}
+
+{% import "knp_menu.html.twig" as knp_menu %}
+
+{% block label %}
+    {% spaceless %}
+        {% if item.getExtra('icon') %}
+            <span class="{{ item.getExtra('icon') }}"></span>
+        {% endif %}
+        {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
+            {{ item.label|raw }}
+        {% else %}
+            {{ item.label|trans(item.getExtra('translation_params', {}), item.getExtra('translation_domain', 'messages')) }}
+        {% endif %}
+    {% endspaceless %}
+{% endblock label %}
+
+{% block root %}
+    {% spaceless %}
+        {% set listAttributes = item.childrenAttributes %}
+
+        {% if options.type is defined %}
+            {% if options.type == 'unstyled' %}
+                {% set listAttributes = listAttributes|merge({ 'class': 'list-unstyled' }) %}
+            {% else %}
+                {% set listAttributes = listAttributes|merge({ 'class': 'nav' }) %}
+
+                {% if options.currentClass is defined and options.currentClass == 'current' %}
+                    {% set options = options|merge({'currentClass': 'active'}) %}
+                {% endif %}
+
+                {% if options.type == 'navbar' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' navbar-nav' }) %}
+                {% elseif options.type == 'stacked' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' nav-pills nav-stacked' }) %}
+                {% elseif options.type == 'tabs' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' nav-tabs' }) %}
+                {% elseif options.type == 'pills' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' nav-pills' }) %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {{ block('list') }}
+    {% endspaceless %}
+{% endblock root %}
+
+{% block item %}
+    {% spaceless %}
+        {% if item.displayed %}
+            {% set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
+            {% if matcher.isCurrent(item) %}
+                {% set classes = classes|merge([options.currentClass]) %}
+            {% elseif matcher.isAncestor(item, options.depth) %}
+                {% set classes = classes|merge([options.ancestorClass]) %}
+            {% endif %}
+            {% if item.hasChildren and options.type is defined and options.type in ['navbar'] %}
+                {% set classes = classes|merge(['dropdown']) %}
+            {% endif %}
+            {% set attributes = item.attributes %}
+            {% if classes is not empty %}
+                {% set attributes = attributes|merge({ 'class': classes|join(' ') }) %}
+            {% endif %}
+            {# displaying the item #}
+            <li{{ knp_menu.attributes(attributes) }}>
+                {% if item.hasChildren and options.type is defined and options.type in ['navbar'] %}
+                    {{ block('dropdownElement') }}
+                {% elseif item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
+                    {{ block('linkElement') }}
+                {% else %}
+                    {{ block('spanElement') }}
+                {% endif %}
+                {# render the list of children#}
+                {% set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+                {% if item.hasChildren and options.type is defined and options.type in ['navbar'] %}
+                    {% set childrenClasses = childrenClasses|merge(['dropdown-menu']) %}
+                {% endif %}
+                {% set listAttributes = item.childrenAttributes|merge({ 'class': childrenClasses|join(' ') }) %}
+                {{ block('list') }}
+            </li>
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block dropdownElement %}
+    {% spaceless %}
+        {% set labelAttributes = item.labelAttributes %}
+        {% set labelAttributes = labelAttributes|merge({ 'class': (labelAttributes.class|default('')~' dropdown-toggle')|trim }) %}
+        {% set labelAttributes = labelAttributes|merge({ 'data-toggle': 'dropdown' }) %}
+        <a href="#"{{ knp_menu.attributes(labelAttributes) }}>{{ block('label') }} <b class="caret"></b></a>
+    {% endspaceless %}
+{% endblock dropdownElement %}
