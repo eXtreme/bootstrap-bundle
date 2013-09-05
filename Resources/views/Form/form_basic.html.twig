@@ -7,11 +7,18 @@
 {% extends "form_div_layout.html.twig" %}
 
 {% block widget_attributes %}
-    {% spaceless %}
+    {%- spaceless %}
         id="{{ id }}" name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
         {% for attrname, attrvalue in attr %}{% if attrname not in ['help'] %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endif %}{% endfor %}
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock widget_attributes %}
+
+{% block button_attributes %}
+    {%- spaceless %}
+        id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif %}
+        {% for attrname, attrvalue in attr %}{% if attrname not in ['icon'] %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+    {% endspaceless -%}
+{% endblock button_attributes %}
 
 {% block form_label %}
     {% set label_attr = label_attr|merge({ 'class': (label_attr.class|default('')~' control-label')|trim }) %}
@@ -109,11 +116,17 @@
 {% endblock textarea_widget %}
 
 {% block button_widget %}
-    {% set btn_class = type == 'submit' ? 'btn-primary' : 'btn-default' %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn '~btn_class)|trim}) %}
-    {% spaceless %}
-        {{ parent() }}
-    {% endspaceless %}
+    {%- spaceless %}
+        {% set btn_class = type == 'submit' ? 'btn-primary' : 'btn-default' %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn '~btn_class)|trim}) %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        {% if attr.icon is defined %}
+            {% set icon = '<span class="'~attr.icon~'"></span> ' %}
+        {% endif %}
+        <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ icon|default('') }}{{ label|trans({}, translation_domain) }}</button>
+    {% endspaceless -%}
 {% endblock button_widget %}
 
 {% block choice_widget_expanded %}
