@@ -7,46 +7,88 @@
 {% extends "ExBootstrapBundle:Form:form_basic.html.twig" %}
 
 {% block form_start %}
-    {% spaceless %}
+    {%- spaceless %}
         {% set attr = attr|merge({ 'class': (attr.class|default('')~' form-horizontal')|trim }) %}
         {{ parent() }}
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock form_start %}
 
-{% block form_label %}
-    {% set label_attr = label_attr|merge({ 'class': (label_attr.class|default('')~' col-lg-3')|trim }) %}
-    {% spaceless %}
-        {{ parent() }}
-    {% endspaceless %}
-{% endblock form_label %}
+{% block form_widget %}
+    {%- spaceless %}
+        {% if compound %}
+            {{ block('form_widget_compound') }}
+        {% else %}
+            {{ block('form_widget_simple') }}
+        {% endif %}
+    {% endspaceless -%}
+{% endblock form_widget %}
 
 {% block form_row %}
-    {% spaceless %}
+    {%- spaceless %}
+        {% set width = 12 %}
+        {% set label_width = 3 %}
+        {% if attr.width is defined %}
+            {% set width = attr.width %}
+        {% endif %}
+        {% if attr.col is defined %}
+            {% set label_width = attr.col %}
+        {% endif %}
+        {% set widget_width = width - label_width %}
+        {% set label_attr = label_attr|merge({ 'width': label_width }) %}
         <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
-            {{ form_label(form) }}
-            <div class="col-lg-9">
+            {{ form_label(form, label, label_attr) }}
+            <div class="col-lg-{{ widget_width }}">
                 {{ form_widget(form) }}
                 {{ form_errors(form) }}
                 {{ block('form_help') }}
             </div>
         </div>
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock %}
 
+{% block form_label %}
+    {%- spaceless %}
+        {% set label_width = 3 %}
+        {% if attr.col is defined %}
+            {% set label_width = attr.col %}
+        {% endif %}
+        {% set label_attr = label_attr|merge({ 'class': (label_attr.class|default('')~' col-lg-'~label_width)|trim }) %}
+        {{ parent() }}
+    {% endspaceless -%}
+{% endblock form_label %}
+
 {% block button_row %}
-    {% spaceless %}
+    {%- spaceless %}
+        {% set width = 12 %}
+        {% set label_width = 3 %}
+        {% if attr.width is defined %}
+            {% set width = attr.width %}
+        {% endif %}
+        {% if attr.col is defined %}
+            {% set label_width = attr.col %}
+        {% endif %}
+        {% set widget_width = width - label_width %}
         <div class="form-group">
-            <div class="col-lg-offset-3 col-lg-9">
+            <div class="col-lg-offset-{{ label_width }} col-lg-{{ widget_width }}">
                 {{ form_widget(form) }}
             </div>
         </div>
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock button_row %}
 
 {% block radio_row %}
-    {% spaceless %}
+    {%- spaceless %}
+        {% set width = 12 %}
+        {% set label_width = 3 %}
+        {% if attr.width is defined %}
+            {% set width = attr.width %}
+        {% endif %}
+        {% if attr.col is defined %}
+            {% set label_width = attr.col %}
+        {% endif %}
+        {% set widget_width = width - label_width %}
         <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
-            <div class="col-lg-offset-3 col-lg-9">
+            <div class="col-lg-offset-{{ label_width }} col-lg-{{ widget_width }}">
                 <div class="radio">
                     {{ form_label(form) }}
                 </div>
@@ -54,13 +96,22 @@
                 {{ block('form_help') }}
             </div>
         </div>
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock radio_row %}
 
 {% block checkbox_row %}
-    {% spaceless %}
+    {%- spaceless %}
+        {% set width = 12 %}
+        {% set label_width = 3 %}
+        {% if attr.width is defined %}
+            {% set width = attr.width %}
+        {% endif %}
+        {% if attr.col is defined %}
+            {% set label_width = attr.col %}
+        {% endif %}
+        {% set widget_width = width - label_width %}
         <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
-            <div class="col-lg-offset-3 col-lg-9">
+            <div class="col-lg-offset-{{ label_width }} col-lg-{{ widget_width }}">
                 <div class="checkbox">
                     {{ form_label(form) }}
                 </div>
@@ -68,5 +119,5 @@
                 {{ block('form_help') }}
             </div>
         </div>
-    {% endspaceless %}
+    {% endspaceless -%}
 {% endblock checkbox_row %}
