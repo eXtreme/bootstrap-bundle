@@ -6,6 +6,7 @@
 
 $(function () {
     $(document).on('click', '.captcha_widget .captcha_reload', function (ev) {
+        ev.preventDefault();
         var $this = $(this);
         var $widget = $this.closest('.captcha_widget');
 
