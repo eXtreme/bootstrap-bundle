@@ -37,7 +37,10 @@
             {% if options.type == 'unstyled' %}
                 {% set listAttributes = listAttributes|merge({ 'class': 'list-unstyled' }) %}
             {% else %}
-                {% set listAttributes = listAttributes|merge({ 'class': 'nav' }) %}
+                {% set listAttributes = listAttributes|merge({ 'class': '' }) %}
+                {% if options.type != 'dropdown' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': 'nav' }) %}
+                {% endif %}
 
                 {% if options.currentClass is defined and options.currentClass == 'current' %}
                     {% set options = options|merge({'currentClass': 'active'}) %}
@@ -51,6 +54,8 @@
                     {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' nav-tabs' }) %}
                 {% elseif options.type == 'pills' %}
                     {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' nav-pills' }) %}
+                {% elseif options.type == 'dropdown' %}
+                    {% set listAttributes = listAttributes|merge({ 'class': listAttributes.class~' dropdown-menu' }) %}
                 {% endif %}
             {% endif %}
         {% endif %}
