@@ -5,6 +5,7 @@
  #}
 
 {% block captcha_widget %}
+    {% set attr = attr|merge({ class: attr.class|default('') }) %}
     {% if is_human %}
 
     {% else %}
